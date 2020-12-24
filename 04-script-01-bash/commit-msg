@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+msg=$(cat $1)
+if [[ ${#msg} -gt 30 ]]
+then
+  echo "Commit lenght is too long. It should be less or equal then 30 symbols."
+  exit 1
+else
+  current_dir=${PWD##*/}
+#  echo $current_dir | grep "[$current_dir]"
+  echo $msg | grep "\[$current_dir\]" >/dev/null
+  if [[ $? -ne 0 ]]
+  then
+    echo "There should be a task code in the commit message"
+    exit 1
+  fi
+fi
+exit 0
