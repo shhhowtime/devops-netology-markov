@@ -7,7 +7,6 @@ then
   exit 1
 else
   current_dir=${PWD##*/}
-#  echo $current_dir | grep "[$current_dir]"
   echo $msg | grep "\[$current_dir\]" >/dev/null
   if [[ $? -ne 0 ]]
   then
