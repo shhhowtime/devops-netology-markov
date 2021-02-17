@@ -1,0 +1,8 @@
+FROM amazoncorretto:8u282-al2
+
+COPY jenkins.war /tmp/jenkins.war
+
+EXPOSE 8080/TCP
+
+ENTRYPOINT ["java"]
+CMD ["-jar", "/tmp/jenkins.war"]
