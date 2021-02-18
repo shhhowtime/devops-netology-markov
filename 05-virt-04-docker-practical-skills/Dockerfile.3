@@ -1,9 +1,11 @@
 FROM node:15.8.0-buster
 
+ENV VCAP_APP_HOST=10.0.0.200
+
 WORKDIR /usr/app
 COPY ./nodejs-demo/ /usr/app
 
-RUN npm install
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf && npm install
 
 EXPOSE 3000
 
