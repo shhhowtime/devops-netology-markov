@@ -1,0 +1,11 @@
+FROM node:15.8.0-buster
+
+WORKDIR /usr/app
+COPY ./nodejs-demo/ /usr/app
+
+RUN npm install
+
+EXPOSE 3000
+
+ENTRYPOINT ["npm"]
+CMD ["start"]
