@@ -1,0 +1,10 @@
+---
+  el:
+    hosts:
+      centos7: { ansible_host: 192.168.1.90 }
+  deb:
+    hosts:
+      ubuntu: { ansible_host: 192.168.1.91 }
+  local:
+    hosts:
+      me: { ansible_host: 127.0.0.1 }
