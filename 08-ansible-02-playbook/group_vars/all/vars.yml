@@ -1,0 +1,4 @@
+---
+  java_jdk_version: 8u281
+  java_oracle_jdk_package: jdk-8u281-linux-x64.tar.gz
+  elastic_version: "7.10.1"
