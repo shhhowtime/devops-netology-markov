@@ -1,0 +1,221 @@
+INFO     default scenario test matrix: dependency, lint, cleanup, destroy, syntax, create, prepare, converge, idempotence, side_effect, verify, cleanup, destroy
+INFO     Performing prerun...
+WARNING  Computed fully qualified role name of Alexey Metlyakov.java does not follow current galaxy requirements.
+Please edit meta/main.yml and assure we can correctly determine full role name:
+
+galaxy_info:
+role_name: my_name  # if absent directory name hosting role is used instead
+namespace: my_galaxy_namespace  # if absent, author is used instead
+
+Namespace: https://galaxy.ansible.com/docs/contributing/namespaces.html#galaxy-namespace-limitations
+Role: https://galaxy.ansible.com/docs/contributing/creating_role.html#role-names
+
+As an alternative, you can add 'role-name' to either skip_list or warn_list.
+
+INFO     Using ../../../.cache/roles/Alexey Metlyakov.java symlink to current repository in order to enable Ansible to find the role using its expected full name.
+INFO     Added ANSIBLE_ROLES_PATH=~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:../../../.cache/roles
+INFO     Running default > dependency
+WARNING  Skipping, missing the requirements file.
+WARNING  Skipping, missing the requirements file.
+INFO     Running default > lint
+INFO     Lint is disabled.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+INFO     Sanity checks: 'docker'
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item=centos8)
+changed: [localhost] => (item=centos7)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+ok: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '734043750087.45040', 'results_file': '/home/theo/.ansible_async/734043750087.45040', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+ok: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '181562747946.45067', 'results_file': '/home/theo/.ansible_async/181562747946.45067', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+ok: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '489665026184.45094', 'results_file': '/home/theo/.ansible_async/489665026184.45094', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+TASK [Delete docker network(s)] ************************************************
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+
+INFO     Running default > syntax
+
+playbook: /home/theo/.ansible/roles/java/molecule/default/converge.yml
+INFO     Running default > create
+
+PLAY [Create] ******************************************************************
+
+TASK [Log into a Docker registry] **********************************************
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}) 
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}) 
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}) 
+
+TASK [Check presence of custom Dockerfiles] ************************************
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True})
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True})
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Create Dockerfiles from image names] *************************************
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}) 
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}) 
+skipping: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}) 
+
+TASK [Discover local Docker images] ********************************************
+ok: [localhost] => (item={'changed': False, 'skipped': True, 'skip_reason': 'Conditional result was False', 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}, 'ansible_loop_var': 'item', 'i': 0, 'ansible_index_var': 'i'})
+ok: [localhost] => (item={'changed': False, 'skipped': True, 'skip_reason': 'Conditional result was False', 'item': {'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}, 'ansible_loop_var': 'item', 'i': 1, 'ansible_index_var': 'i'})
+ok: [localhost] => (item={'changed': False, 'skipped': True, 'skip_reason': 'Conditional result was False', 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item', 'i': 2, 'ansible_index_var': 'i'})
+
+TASK [Build an Ansible compatible image (new)] *********************************
+skipping: [localhost] => (item=molecule_local/docker.io/pycontribs/centos:8) 
+skipping: [localhost] => (item=molecule_local/docker.io/pycontribs/centos:7) 
+skipping: [localhost] => (item=molecule_local/docker.io/pycontribs/ubuntu:latest) 
+
+TASK [Create docker network(s)] ************************************************
+
+TASK [Determine the CMD directives] ********************************************
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True})
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True})
+ok: [localhost] => (item={'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True})
+
+TASK [Create molecule instance(s)] *********************************************
+changed: [localhost] => (item=centos8)
+changed: [localhost] => (item=centos7)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) creation to complete] *******************************
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '515077694289.45473', 'results_file': '/home/theo/.ansible_async/515077694289.45473', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '746715835004.45502', 'results_file': '/home/theo/.ansible_async/746715835004.45502', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '16522262166.45544', 'results_file': '/home/theo/.ansible_async/16522262166.45544', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=5    changed=2    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0
+
+INFO     Running default > prepare
+WARNING  Skipping, prepare playbook not configured.
+INFO     Running default > converge
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [ubuntu]
+ok: [centos8]
+ok: [centos7]
+
+TASK [Include mnt-homeworks-ansible] *******************************************
+
+TASK [java : Upload .tar.gz file containing binaries from local storage] *******
+skipping: [centos7]
+skipping: [centos8]
+skipping: [ubuntu]
+
+TASK [java : Upload .tar.gz file conaining binaries from remote storage] *******
+changed: [ubuntu]
+changed: [centos7]
+changed: [centos8]
+
+TASK [java : Ensure installation dir exists] ***********************************
+changed: [ubuntu]
+changed: [centos7]
+changed: [centos8]
+
+TASK [java : Extract java in the installation directory] ***********************
+changed: [ubuntu]
+changed: [centos8]
+changed: [centos7]
+
+TASK [java : Export environment variables] *************************************
+changed: [ubuntu]
+changed: [centos7]
+changed: [centos8]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=5    changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+centos8                    : ok=5    changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+ubuntu                     : ok=5    changed=4    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+
+INFO     Running default > idempotence
+
+PLAY [Converge] ****************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [ubuntu]
+ok: [centos8]
+ok: [centos7]
+
+TASK [Include mnt-homeworks-ansible] *******************************************
+
+TASK [java : Upload .tar.gz file containing binaries from local storage] *******
+skipping: [centos7]
+skipping: [centos8]
+skipping: [ubuntu]
+
+TASK [java : Upload .tar.gz file conaining binaries from remote storage] *******
+ok: [centos7]
+ok: [ubuntu]
+ok: [centos8]
+
+TASK [java : Ensure installation dir exists] ***********************************
+ok: [centos7]
+ok: [ubuntu]
+ok: [centos8]
+
+TASK [java : Extract java in the installation directory] ***********************
+skipping: [centos7]
+skipping: [centos8]
+skipping: [ubuntu]
+
+TASK [java : Export environment variables] *************************************
+ok: [centos7]
+ok: [ubuntu]
+ok: [centos8]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=4    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+centos8                    : ok=4    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+
+INFO     Idempotence completed successfully.
+INFO     Running default > side_effect
+WARNING  Skipping, side effect playbook not configured.
+INFO     Running default > verify
+INFO     Running Ansible Verifier
+
+PLAY [Verify] ******************************************************************
+
+TASK [Check Java can running] **************************************************
+ok: [ubuntu]
+ok: [centos7]
+ok: [centos8]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+centos8                    : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+ubuntu                     : ok=1    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Verifier completed successfully.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item=centos8)
+changed: [localhost] => (item=centos7)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) deletion to complete (300 retries left).
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '299290347212.56310', 'results_file': '/home/theo/.ansible_async/299290347212.56310', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:8', 'name': 'centos8', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '417763482513.56337', 'results_file': '/home/theo/.ansible_async/417763482513.56337', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/centos:7', 'name': 'centos7', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+changed: [localhost] => (item={'started': 1, 'finished': 0, 'ansible_job_id': '550297584377.56364', 'results_file': '/home/theo/.ansible_async/550297584377.56364', 'changed': True, 'failed': False, 'item': {'image': 'docker.io/pycontribs/ubuntu:latest', 'name': 'ubuntu', 'pre_build_image': True}, 'ansible_loop_var': 'item'})
+
+TASK [Delete docker network(s)] ************************************************
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+
+INFO     Pruning extra files from scenario ephemeral directory

@@ -1,0 +1,7 @@
+---
+  el:
+    hosts:
+      centos7: { ansible_host: 192.168.1.90, ansible_connection: ssh, ansible_user: theo }
+  deb:
+    hosts:
+      ubuntu: { ansible_host: 192.168.1.16, ansible_connection: ssh, ansible_user: theo }
