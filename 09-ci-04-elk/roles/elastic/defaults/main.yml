@@ -1,0 +1,7 @@
+---
+
+ansible_become: yes
+
+elastic_monitoring: true
+elastic_http_port: 9200
+elastic_transport_port: 9300

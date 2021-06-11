@@ -1,0 +1,29 @@
+---
+
+- name: create directories for filebeat
+  become: yes
+  file: path=/etc/filebeat state=directory recurse=yes mode=755 owner=root group=root
+
+- name: Deploy filebeat configs
+  copy:
+    src: files//{{ item }}
+    dest: /etc/filebeat/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - filebeat.yml
+  become: yes
+
+- name: Run filebeat docker container
+  docker_container:
+    recreate: yes
+    name: filebeat
+    image: docker.elastic.co/beats/filebeat:7.2.0
+    restart: yes
+    volumes:
+      - /var/log/docker:/var/log:ro
+      - /etc/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+    network_mode: host
+    log_driver: syslog
+    log_options: tag=docker/filebeat

@@ -1,0 +1,54 @@
+bootstrap.memory_lock: true
+
+network.host: 0.0.0.0
+
+http.port: {{ elastic_http_port }}
+transport.port: {{ elastic_transport_port }}
+
+path.repo: ["/usr/share/elasticsearch/repo"]
+
+network.bind_host: [_site_, _global_]
+
+network.publish_host: _site_
+
+script.allowed_types: inline
+
+xpack.security.enabled: false
+xpack.graph.enabled: false
+xpack.watcher.enabled: false
+
+xpack.monitoring.collection.enabled: true
+
+{% if elastic_monitoring %}
+xpack.monitoring.exporters:
+  id1:
+    type: http
+    host: ["http://{{ hostvars[elastic_monitoring_host]['private_addr'] }}:9200"]
+{% endif %}
+
+{% if groups['es'] | count > 1 %}
+
+discovery.seed_hosts:
+{% for host in groups['es'] %}
+  - {{ hostvars[host]['private_addr'] }}
+{% endfor %}
+
+# You should not use this setting when restarting a cluster or adding a new node to an existing cluster
+#cluster.initial_master_nodes:
+#{% for host in groups['es'] %}
+#  - {{ host }}.node
+#{% endfor %}
+
+{% else %}
+
+discovery.type: single-node
+
+{% endif %}
+
+cluster.name: es.cluster.{{ elastic_version }}
+node.name: {{ inventory_hostname }}.node
+
+indices.breaker.total.use_real_memory: false
+
+cluster.routing.allocation.node_concurrent_incoming_recoveries: 3
+
