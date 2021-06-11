@@ -1,0 +1,7 @@
+---
+
+- name: Setup elasticsearch
+  include: elastic.yml
+
+- name: Setup kibana
+  include: kibana.yml

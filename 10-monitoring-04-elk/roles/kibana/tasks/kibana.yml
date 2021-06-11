@@ -1,0 +1,17 @@
+---
+
+- name: Upload kibana.yml
+  template: src=templates/kibana.yml dest=/etc/kibana.yml mode=644
+  become: yes
+
+- name: Run kibana
+  docker_container:
+    recreate: yes
+    name: kibana
+    image: docker.elastic.co/kibana/kibana:{{ elastic_version }}
+    restart_policy: always
+    volumes:
+      - /etc/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    network_mode: host
+    log_driver: syslog
+    log_options: tag=docker/kibana

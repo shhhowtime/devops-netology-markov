@@ -1,0 +1,40 @@
+---
+
+- name: create directories for logstash
+  become: yes
+  file: path=/etc/logstash state=directory recurse=yes mode=755 owner=root group=root
+
+- name: Deploy logstash configs
+  copy:
+    src: files//{{ item }}
+    dest: /etc/logstash/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - logstash.yml
+    - logstash.conf
+    - custom_patterns.txt
+  become: yes
+
+- name: Run logstash docker container
+  docker_container:
+    recreate: yes
+    name: logstash
+    image: docker.elastic.co/logstash/logstash:7.9.3
+    restart: yes
+    volumes:
+      - /etc/logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - /etc/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - /etc/logstash/custom_patterns.txt:/usr/share/logstash/config/patterns/custom_patterns.txt
+    network_mode: host
+    ports:
+      - "5046:5046"
+    log_driver: syslog
+    log_options: tag=docker/logstash
+    env:
+      SERVICE_NAME: 'logstash'
+      SERVICE_TAGS: 'logstash,urlprefix-:5046 proto=tcp'
+      SERVICE_CHECK_TCP: 'true'
+      SERVICE_CHECK_INTERVAL: '3s'
+      SERVICE_CHECK_TIMEOUT: '1s'

@@ -1,0 +1,15 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - '/var/log/nginx.log'
+      - '/var/log/fabio.log'
+    encoding: "utf-8"
+    document_type: syslog
+
+output.logstash:
+  hosts: ["logstash.service.consul:5046"]
+
+logging.json: true
+logging.metrics.enabled: false
+

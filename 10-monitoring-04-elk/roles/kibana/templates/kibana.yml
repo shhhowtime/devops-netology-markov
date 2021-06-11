@@ -1,0 +1,15 @@
+server.port: 5600
+server.host: "0.0.0.0"
+server.rewriteBasePath: "false"
+server.name: "monitor"
+
+elasticsearch.hosts:
+{% for host in groups['es'] %}
+  - http://{{ hostvars[host]['private_addr'] }}:9200
+{% endfor %}
+
+xpack.monitoring.elasticsearch.hosts:
+  - http://{{ hostvars[elastic_monitoring_host]['private_addr'] }}:9200
+
+xpack.reporting.encryptionKey: "secret"
+xpack.security.enabled: false

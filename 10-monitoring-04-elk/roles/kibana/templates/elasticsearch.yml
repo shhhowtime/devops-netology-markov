@@ -1,0 +1,19 @@
+network.host: 0.0.0.0
+
+network.bind_host: [_site_, _global_]
+network.publish_host: _site_
+
+http.port: 9201
+transport.port: 9301
+
+bootstrap.memory_lock: true
+
+xpack.monitoring.enabled: false
+xpack.security.enabled: false
+xpack.graph.enabled: false
+xpack.watcher.enabled: false
+
+discovery.type: single-node
+cluster.name: Monitoring
+
+node.name: {{ inventory_hostname }}.node

@@ -1,0 +1,55 @@
+---
+
+- name: Fail if too many hosts
+  fail:
+    msg: Too many hosts in play. Run this tasks only for one host
+  when: ansible_play_hosts_all | length > 1
+
+- sysctl:
+    name: vm.max_map_count
+    value: "{{ elastic_vm_max_map_count }}"
+    state: present
+    reload: yes
+
+- name: Create data directory
+  file:
+    path: '{{ elastic_data_dir }}/elasticsearch/{{ elastic_major_version }}/data/'
+    recurse: yes
+    state: directory
+    mode: 0766
+    owner: 1000
+    group: 1000
+
+- name: Create config file
+  template:
+    src: 'templates/elasticsearch_{{ elastic_major_version }}.yml'
+    dest: '{{ elastic_data_dir }}/elasticsearch/{{ elastic_major_version }}/elasticsearch.yml'
+    mode: 0644
+
+- docker_container:
+    recreate: yes
+    name: elasticsearch-{{ elastic_version }}
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ elastic_version }}
+    restart_policy: always
+    volumes:
+      - "{{ elastic_data_dir }}/elasticsearch/{{ elastic_major_version }}/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+      - "{{ elastic_data_dir }}/elasticsearch/{{ elastic_major_version }}/data:/usr/share/elasticsearch/data:rw"
+      - "{{ elastic_data_dir }}/elasticsearch/{{ elastic_major_version }}/repo:/usr/share/elasticsearch/repo:rw"
+    network_mode: host
+    ports:
+      - '{{ elastic_http_port }}:{{ elastic_http_port }}'
+    log_driver: syslog
+    log_options: tag=docker/elasticsearch
+    env:
+      SERVICE_NAME: 'es'
+      SERVICE_TAGS: 'es,urlprefix-:{{ elastic_http_port }} proto=tcp'
+      SERVICE_CHECK_TCP: 'true'
+      SERVICE_CHECK_INTERVAL: '3s'
+      SERVICE_CHECK_TIMEOUT: '1s'
+      ES_JAVA_OPTS: "-Xms{{ elastic_java_xms }}g -Xmx{{ elastic_java_xmx }}g"
+    ulimits:
+      - nofile:65536:65536
+      - memlock:-1:-1
+    capabilities:
+      - IPC_LOCK
+    user: 1000:1000

@@ -1,0 +1,37 @@
+---
+
+- name: Upload elasticsearch.yml
+  template: src=templates/elasticsearch.yml dest=/etc/elasticsearch.yml mode=444
+  become: yes
+
+- name: Create elasticsearch data directory
+  file: path=/var/lib/elasticsearch/ state=directory mode=755 owner=ubuntu group=ubuntu
+  become: yes
+
+- name: Run elaastic for monitoring
+  docker_container:
+    recreate: yes
+    name: elasticsearch-monitor
+    image: docker.elastic.co/elasticsearch/elasticsearch:{{ elastic_version }}
+    restart: yes
+    volumes:
+      - /etc/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /var/lib/elasticsearch:/usr/share/elasticsearch/data:rw
+    network_mode: host
+    ports:
+      - '9201:9201'
+    log_driver: syslog
+    log_options: tag=docker/elasticsearch
+    cpuset_cpus: 6-7
+    ulimits:
+      - nofile:65536:65536
+      - memlock:-1:-1
+    capabilities:
+      - IPC_LOCK
+    env:
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+      SERVICE_NAME: 'es-monitor'
+      SERVICE_TAGS: 'es-monitor,urlprefix-:9201 proto=tcp'
+      SERVICE_CHECK_TCP: 'true'
+      SERVICE_CHECK_INTERVAL: '3s'
+      SERVICE_CHECK_TIMEOUT: '1s'
