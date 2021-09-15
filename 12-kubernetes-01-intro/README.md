@@ -10,3 +10,7 @@
 ### Задание 3. Kubectl на другой машине
 
 ![Задание 3](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-01-intro/3.png)
+
+### Дополнение. Панель Kubernetes dashboard
+
+![Дополнение](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-01-intro/4.png)
