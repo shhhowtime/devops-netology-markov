@@ -5,5 +5,5 @@ metadata:
   name: log-watcher
 rules:
 - apiGroups: [""]
-  resources: ["pods/log"]
+  resources: ["pods", "pods/log"]
   verbs: ["get", "watch", "list"]
