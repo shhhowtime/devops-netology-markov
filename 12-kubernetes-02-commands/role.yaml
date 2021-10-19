@@ -1,0 +1,10 @@
+  GNU nano 4.8                                                                                                                      test.yaml                                                                                                                                 
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: log-watcher
+rules:
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get", "watch", "list"]
