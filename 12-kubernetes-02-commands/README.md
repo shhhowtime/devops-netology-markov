@@ -12,7 +12,7 @@
 Скриншот просмтора логов с ноды test2:
 ![Тоже задание 2](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-02-commands/2.1.png)
 
-Ссылки на конфиг [role](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-02-commands/role.yaml "role.yaml") и конфиг [role binding](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-02-commands/role.yaml "rolebinding.yaml").
+Ссылки на конфиг [role](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-02-commands/role.yaml "role.yaml") и конфиг [role binding](https://github.com/shhhowtime/devops-netology-markov/blob/main/12-kubernetes-02-commands/rolebinding.yaml "rolebinding.yaml").
 
 ### Задание 3. Изменение числа реплик.
 
