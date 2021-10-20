@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-node-deployment
+  namespace: netology
+  labels:
+    app: hello-node
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: hello-node
+  template:
+    metadata:
+      labels:
+        app: hello-node
+    spec:
+      containers:
+      - name: hello-node
+        image: k8s.gcr.io/echoserver:1.4
+        ports:
+        - containerPort: 8080
