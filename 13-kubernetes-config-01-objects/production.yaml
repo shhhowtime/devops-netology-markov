@@ -1,0 +1,156 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  namespace: prod
+  name: my-storage-class-prod
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: prod
+  name: db-db-0
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: my-storage-class-prod
+  local:
+    path: /mnt
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: production-frontend
+  labels:
+    app: production-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: production-frontend
+  template:
+    metadata:
+      namespace: prod
+      labels:
+        app: production-frontend
+    spec: 
+      containers:
+      - name: frontend
+        image: shhhowtime/kube-front-netology-markov:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: BASE_URL
+          value: "http://production-backend:9000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: production-backend
+  labels:
+    app: production-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: production-backend
+  template:
+    metadata:
+      namespace: prod
+      labels:
+        app: production-backend
+    spec:
+      containers:
+      - name: backend
+        image: shhhowtime/kube-back-netology-markov:latest
+        ports:
+        - containerPort: 9000
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: prod
+  name: db
+spec:
+  selector:
+    matchLabels:
+      app: db
+  serviceName: "db"
+  replicas: 1
+  template:
+    metadata:
+      namespace: prod
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:13-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "news"
+        volumeMounts:
+        - name: db
+          mountPath: /var/lib/postgresql
+          subPath: postgres
+        ports:
+        - containerPort: 5432
+  volumeClaimTemplates:
+  - metadata:
+      name: db
+      namespace: prod
+    spec:
+      accessModes: [ "ReadWriteMany" ]
+      storageClassName: "my-storage-class-prod"
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: db
+  labels:
+    app: db
+spec:
+  type: NodePort
+  ports:
+  - port: 5432
+    protocol: TCP
+  selector:
+    app: db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: production-backend
+  labels:
+    app: production-backend
+spec:
+  type: NodePort
+  ports:
+  - port: 9000
+    protocol: TCP
+  selector:
+    app: production-backend

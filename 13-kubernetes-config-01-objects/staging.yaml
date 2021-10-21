@@ -1,0 +1,108 @@
+piVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: my-storage-class
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: my-storage-class
+  local:
+    path: /mnt/
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: staging-app
+spec:
+  ports:
+  - port: 5432
+    name: db
+  clusterIP: None
+  selector:
+    app: staging-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: staging-app
+  labels:
+    app: staging-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: staging-app
+  template:
+    metadata:
+      labels:
+        app: staging-app
+    spec: 
+      containers:
+      - name: frontend
+        image: shhhowtime/kube-front-netology-markov:latest
+        ports:
+        - containerPort: 8000
+      - name: backend
+        image: shhhowtime/kube-back-netology-markov:latest
+        ports:
+        - containerPort: 9000
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: staging-app
+spec:
+  selector:
+    matchLabels:
+      app: staging-app
+  serviceName: "staging-app"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: staging-app
+    spec:
+      containers:
+      - name: db
+        image: postgres:13-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "news"
+        volumeMounts:
+        - name: db
+          mountPath: /var/lib/postgresql
+          subPath: postgres
+  volumeClaimTemplates:
+  - metadata:
+      name: db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 1Gi

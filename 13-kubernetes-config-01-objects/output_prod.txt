@@ -1,0 +1,359 @@
+root@node1:~# kubectl get pods --namespace=prod
+NAME                                   READY   STATUS    RESTARTS      AGE
+curl                                   1/1     Running   1 (19m ago)   21m
+db-0                                   1/1     Running   0             4m57s
+production-backend-bd5cd656f-mrqv4     1/1     Running   0             4m57s
+production-frontend-6944f5b578-dnlvm   1/1     Running   0             4m57s
+root@node1:~# 
+root@node1:~# 
+root@node1:~# kubectl describe pods --namespace=prod
+Name:         curl
+Namespace:    prod
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 18:08:18 +0000
+Labels:       run=curl
+Annotations:  cni.projectcalico.org/containerID: ffd2356276fd9b2f13dce21e8201bde3aeade4517251c1eea838c408ea7c4e41
+              cni.projectcalico.org/podIP: 10.233.90.81/32
+              cni.projectcalico.org/podIPs: 10.233.90.81/32
+Status:       Running
+IP:           10.233.90.81
+IPs:
+  IP:  10.233.90.81
+Containers:
+  curl:
+    Container ID:   docker://377c748863adbd2c133b92fbdb08aab53bb57f7de0eb1e3f377593994890ceca
+    Image:          radial/busyboxplus:curl
+    Image ID:       docker-pullable://radial/busyboxplus@sha256:a68c05ab1112fd90ad7b14985a48520e9d26dbbe00cb9c09aa79fdc0ef46b372
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Thu, 21 Oct 2021 18:10:51 +0000
+    Last State:     Terminated
+      Reason:       Completed
+      Exit Code:    0
+      Started:      Thu, 21 Oct 2021 18:08:20 +0000
+      Finished:     Thu, 21 Oct 2021 18:10:49 +0000
+    Ready:          True
+    Restart Count:  1
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-drdlx (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-drdlx:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age                From               Message
+  ----    ------     ----               ----               -------
+  Normal  Scheduled  22m                default-scheduler  Successfully assigned prod/curl to node1
+  Normal  Pulled     20m (x2 over 22m)  kubelet            Container image "radial/busyboxplus:curl" already present on machine
+  Normal  Created    20m (x2 over 22m)  kubelet            Created container curl
+  Normal  Started    20m (x2 over 22m)  kubelet            Started container curl
+
+
+Name:         db-0
+Namespace:    prod
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 18:25:20 +0000
+Labels:       app=db
+              controller-revision-hash=db-74dcd468d9
+              statefulset.kubernetes.io/pod-name=db-0
+Annotations:  cni.projectcalico.org/containerID: f890850b24f23c29c179420ee71e4e055f7b54bb45da8e0981d09a3039fe343b
+              cni.projectcalico.org/podIP: 10.233.90.88/32
+              cni.projectcalico.org/podIPs: 10.233.90.88/32
+Status:       Running
+IP:           10.233.90.88
+IPs:
+  IP:           10.233.90.88
+Controlled By:  StatefulSet/db
+Containers:
+  db:
+    Container ID:   docker://1622364dd514ab6ecf36aae427f5898b667077967f5f89a8f9603a0dfd857f06
+    Image:          postgres:13-alpine
+    Image ID:       docker-pullable://postgres@sha256:e9e481c3b0960e6acdd0d1202938617b9075d20f477765b531846671b7e624f2
+    Port:           5432/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 18:25:23 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_DB:        news
+    Mounts:
+      /var/lib/postgresql from db (rw,path="postgres")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-k2sh2 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  db:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  db-db-0
+    ReadOnly:   false
+  kube-api-access-k2sh2:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  5m37s  default-scheduler  Successfully assigned prod/db-0 to node1
+  Normal  Pulled     5m34s  kubelet            Container image "postgres:13-alpine" already present on machine
+  Normal  Created    5m34s  kubelet            Created container db
+  Normal  Started    5m34s  kubelet            Started container db
+
+
+Name:         production-backend-bd5cd656f-mrqv4
+Namespace:    prod
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 18:25:20 +0000
+Labels:       app=production-backend
+              pod-template-hash=bd5cd656f
+Annotations:  cni.projectcalico.org/containerID: 6600747adabb4e373fe35391b15652056a1aa3b7ef2813c4377b588b0912f5b5
+              cni.projectcalico.org/podIP: 10.233.90.86/32
+              cni.projectcalico.org/podIPs: 10.233.90.86/32
+Status:       Running
+IP:           10.233.90.86
+IPs:
+  IP:           10.233.90.86
+Controlled By:  ReplicaSet/production-backend-bd5cd656f
+Containers:
+  backend:
+    Container ID:   docker://29507f2329ef8d53b8175ccc99a1afe59c258cb7ddfeb1e6fa232ae0390dba95
+    Image:          shhhowtime/kube-back-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:07ee5d600ac2fcc900d7dd6c7047c4cfa0b845228874044977e9c0b114e927c1
+    Port:           9000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 18:25:26 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-mhkfb (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-mhkfb:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  5m37s  default-scheduler  Successfully assigned prod/production-backend-bd5cd656f-mrqv4 to node1
+  Normal  Pulling    5m35s  kubelet            Pulling image "shhhowtime/kube-back-netology-markov:latest"
+  Normal  Pulled     5m32s  kubelet            Successfully pulled image "shhhowtime/kube-back-netology-markov:latest" in 2.657721444s
+  Normal  Created    5m32s  kubelet            Created container backend
+  Normal  Started    5m31s  kubelet            Started container backend
+
+
+Name:         production-frontend-6944f5b578-dnlvm
+Namespace:    prod
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 18:25:20 +0000
+Labels:       app=production-frontend
+              pod-template-hash=6944f5b578
+Annotations:  cni.projectcalico.org/containerID: 7cb263a657c6e5ed64c542952872af8eab51fe59e33a1306044e7ee4f43567bb
+              cni.projectcalico.org/podIP: 10.233.90.87/32
+              cni.projectcalico.org/podIPs: 10.233.90.87/32
+Status:       Running
+IP:           10.233.90.87
+IPs:
+  IP:           10.233.90.87
+Controlled By:  ReplicaSet/production-frontend-6944f5b578
+Containers:
+  frontend:
+    Container ID:   docker://6d8af3f5d19e1e870ecbacb9e83641acc19cee888dc92ee135e2861e0b0f821d
+    Image:          shhhowtime/kube-front-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:935cb83681e8ec41ef4436fb1c11fbc5bce64280af9ec80d5df8dc4a04f8defa
+    Port:           8000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 18:25:28 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      BASE_URL:  http://production-backend:9000
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-8bqc6 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-8bqc6:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  5m37s  default-scheduler  Successfully assigned prod/production-frontend-6944f5b578-dnlvm to node1
+  Normal  Pulling    5m34s  kubelet            Pulling image "shhhowtime/kube-front-netology-markov:latest"
+  Normal  Pulled     5m29s  kubelet            Successfully pulled image "shhhowtime/kube-front-netology-markov:latest" in 4.928988846s
+  Normal  Created    5m29s  kubelet            Created container frontend
+  Normal  Started    5m29s  kubelet            Started container frontend
+root@node1:~# 
+root@node1:~# 
+root@node1:~# kubectl get deployment --namespace=prod
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+production-backend    1/1     1            1           7m27s
+production-frontend   1/1     1            1           7m27s
+root@node1:~# 
+root@node1:~# 
+root@node1:~# kubectl describe deployment --namespace=prod
+Name:                   production-backend
+Namespace:              prod
+CreationTimestamp:      Thu, 21 Oct 2021 18:25:20 +0000
+Labels:                 app=production-backend
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=production-backend
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=production-backend
+  Containers:
+   backend:
+    Image:        shhhowtime/kube-back-netology-markov:latest
+    Port:         9000/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   production-backend-bd5cd656f (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  7m53s  deployment-controller  Scaled up replica set production-backend-bd5cd656f to 1
+
+
+Name:                   production-frontend
+Namespace:              prod
+CreationTimestamp:      Thu, 21 Oct 2021 18:25:20 +0000
+Labels:                 app=production-frontend
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=production-frontend
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=production-frontend
+  Containers:
+   frontend:
+    Image:      shhhowtime/kube-front-netology-markov:latest
+    Port:       8000/TCP
+    Host Port:  0/TCP
+    Environment:
+      BASE_URL:  http://production-backend:9000
+    Mounts:      <none>
+  Volumes:       <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   production-frontend-6944f5b578 (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  7m53s  deployment-controller  Scaled up replica set production-frontend-6944f5b578 to 1
+root@node1:~# 
+root@node1:~# 
+root@node1:~# kubectl get statefulset --namespace=prod
+NAME   READY   AGE
+db     1/1     8m53s
+root@node1:~# 
+root@node1:~# 
+root@node1:~# kubectl describe statefulset --namespace=prod
+Name:               db
+Namespace:          prod
+CreationTimestamp:  Thu, 21 Oct 2021 18:25:20 +0000
+Selector:           app=db
+Labels:             <none>
+Annotations:        <none>
+Replicas:           1 desired | 1 total
+Update Strategy:    RollingUpdate
+  Partition:        0
+Pods Status:        1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  app=db
+  Containers:
+   db:
+    Image:      postgres:13-alpine
+    Port:       5432/TCP
+    Host Port:  0/TCP
+    Environment:
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_DB:        news
+    Mounts:
+      /var/lib/postgresql from db (rw,path="postgres")
+  Volumes:  <none>
+Volume Claims:
+  Name:          db
+  StorageClass:  my-storage-class-prod
+  Labels:        <none>
+  Annotations:   <none>
+  Capacity:      1Gi
+  Access Modes:  [ReadWriteMany]
+Events:
+  Type    Reason            Age    From                    Message
+  ----    ------            ----   ----                    -------
+  Normal  SuccessfulCreate  9m14s  statefulset-controller  create Pod db-0 in StatefulSet db successful

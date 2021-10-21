@@ -1,0 +1,369 @@
+root@node1:~# kubectl get pods
+NAME                           READY   STATUS    RESTARTS   AGE
+staging-app-0                  1/1     Running   0          2m48s
+staging-app-7b7d5f5f9c-bg5h7   2/2     Running   0          2m48s
+root@node1:~#
+root@node1:~#
+root@node1:~# kubectl describe pods
+Name:         staging-app-0
+Namespace:    default
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 13:09:13 +0000
+Labels:       app=staging-app
+              controller-revision-hash=staging-app-5d94c679c5
+              statefulset.kubernetes.io/pod-name=staging-app-0
+Annotations:  cni.projectcalico.org/containerID: 2cf195f54ae67dc6f45b918d74a8454debbe323d234ed6a6d2b607885287c9cc
+              cni.projectcalico.org/podIP: 10.233.90.22/32
+              cni.projectcalico.org/podIPs: 10.233.90.22/32
+Status:       Running
+IP:           10.233.90.22
+IPs:
+  IP:           10.233.90.22
+Controlled By:  StatefulSet/staging-app
+Containers:
+  db:
+    Container ID:   docker://fcacee67090672864c6a68f161053771175e11b494d144b1b746dd20473b8e7c
+    Image:          postgres:13-alpine
+    Image ID:       docker-pullable://postgres@sha256:e9e481c3b0960e6acdd0d1202938617b9075d20f477765b531846671b7e624f2
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:15 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_DB:        news
+    Mounts:
+      /var/lib/postgresql from db (rw,path="postgres")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-knpd6 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  db:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  db-staging-app-0
+    ReadOnly:   false
+  kube-api-access-knpd6:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age    From               Message
+  ----     ------            ----   ----               -------
+  Warning  FailedScheduling  2m57s  default-scheduler  0/1 nodes are available: 1 pod has unbound immediate PersistentVolumeClaims.
+  Warning  FailedScheduling  2m45s  default-scheduler  0/1 nodes are available: 1 pod has unbound immediate PersistentVolumeClaims.
+  Normal   Scheduled         2m42s  default-scheduler  Successfully assigned default/staging-app-0 to node1
+  Normal   Pulled            2m41s  kubelet            Container image "postgres:13-alpine" already present on machine
+  Normal   Created           2m41s  kubelet            Created container db
+  Normal   Started           2m41s  kubelet            Started container db
+
+
+Name:         staging-app-7b7d5f5f9c-bg5h7
+Namespace:    default
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 13:08:58 +0000
+Labels:       app=staging-app
+              pod-template-hash=7b7d5f5f9c
+Annotations:  cni.projectcalico.org/containerID: 34f2ffcc41a5caf119551188ff9c6feaff72bcbecb2f16800894cf92aa11694c
+              cni.projectcalico.org/podIP: 10.233.90.21/32
+              cni.projectcalico.org/podIPs: 10.233.90.21/32
+Status:       Running
+IP:           10.233.90.21
+IPs:
+  IP:           10.233.90.21
+Controlled By:  ReplicaSet/staging-app-7b7d5f5f9c
+Containers:
+  frontend:
+    Container ID:   docker://1c6f685799087afcd1bd916a59f44a6abe5924911a02047cf475071483e913b3
+    Image:          shhhowtime/kube-front-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:935cb83681e8ec41ef4436fb1c11fbc5bce64280af9ec80d5df8dc4a04f8defa
+    Port:           8000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:02 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ff2r8 (ro)
+  backend:
+    Container ID:   docker://5f2ab08423c80643e3415db6cb8147a5264493170bae6285b22a993bf8d5d12f
+    Image:          shhhowtime/kube-back-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:07ee5d600ac2fcc900d7dd6c7047c4cfa0b845228874044977e9c0b114e927c1
+    Port:           9000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:05 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ff2r8 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-ff2r8:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  2m57s  default-scheduler  Successfully assigned default/staging-app-7b7d5f5f9c-bg5h7 to node1
+  Normal  Pulling    2m57s  kubelet            Pulling image "shhhowtime/kube-front-netology-markov:latest"
+  Normal  Pulled     2m54s  kubelet            Successfully pulled image "shhhowtime/kube-front-netology-markov:latest" in 2.566209455s
+  Normal  Created    2m54s  kubelet            Created container frontend
+  Normal  Started    2m54s  kubelet            Started container frontend
+  Normal  Pulling    2m54s  kubelet            Pulling image "shhhowtime/kube-back-netology-markov:latest"
+  Normal  Pulled     2m51s  kubelet            Successfully pulled image "shhhowtime/kube-back-netology-markov:latest" in 2.718878893s
+  Normal  Created    2m51s  kubelet            Created container backend
+  Normal  Started    2m51s  kubelet            Started container backend
+Name:         staging-app-0
+Namespace:    default
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 13:09:13 +0000
+Labels:       app=staging-app
+              controller-revision-hash=staging-app-5d94c679c5
+              statefulset.kubernetes.io/pod-name=staging-app-0
+Annotations:  cni.projectcalico.org/containerID: 2cf195f54ae67dc6f45b918d74a8454debbe323d234ed6a6d2b607885287c9cc
+              cni.projectcalico.org/podIP: 10.233.90.22/32
+              cni.projectcalico.org/podIPs: 10.233.90.22/32
+Status:       Running
+IP:           10.233.90.22
+IPs:
+  IP:           10.233.90.22
+Controlled By:  StatefulSet/staging-app
+Containers:
+  db:
+    Container ID:   docker://fcacee67090672864c6a68f161053771175e11b494d144b1b746dd20473b8e7c
+    Image:          postgres:13-alpine
+    Image ID:       docker-pullable://postgres@sha256:e9e481c3b0960e6acdd0d1202938617b9075d20f477765b531846671b7e624f2
+    Port:           <none>
+    Host Port:      <none>
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:15 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_DB:        news
+    Mounts:
+      /var/lib/postgresql from db (rw,path="postgres")
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-knpd6 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  db:
+    Type:       PersistentVolumeClaim (a reference to a PersistentVolumeClaim in the same namespace)
+    ClaimName:  db-staging-app-0
+    ReadOnly:   false
+  kube-api-access-knpd6:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age    From               Message
+  ----     ------            ----   ----               -------
+  Warning  FailedScheduling  3m6s   default-scheduler  0/1 nodes are available: 1 pod has unbound immediate PersistentVolumeClaims.
+  Warning  FailedScheduling  2m53s  default-scheduler  0/1 nodes are available: 1 pod has unbound immediate PersistentVolumeClaims.
+  Normal   Scheduled         2m50s  default-scheduler  Successfully assigned default/staging-app-0 to node1
+  Normal   Pulled            2m49s  kubelet            Container image "postgres:13-alpine" already present on machine
+  Normal   Created           2m49s  kubelet            Created container db
+  Normal   Started           2m49s  kubelet            Started container db
+
+
+Name:         staging-app-7b7d5f5f9c-bg5h7
+Namespace:    default
+Priority:     0
+Node:         node1/192.168.1.246
+Start Time:   Thu, 21 Oct 2021 13:08:58 +0000
+Labels:       app=staging-app
+              pod-template-hash=7b7d5f5f9c
+Annotations:  cni.projectcalico.org/containerID: 34f2ffcc41a5caf119551188ff9c6feaff72bcbecb2f16800894cf92aa11694c
+              cni.projectcalico.org/podIP: 10.233.90.21/32
+              cni.projectcalico.org/podIPs: 10.233.90.21/32
+Status:       Running
+IP:           10.233.90.21
+IPs:
+  IP:           10.233.90.21
+Controlled By:  ReplicaSet/staging-app-7b7d5f5f9c
+Containers:
+  frontend:
+    Container ID:   docker://1c6f685799087afcd1bd916a59f44a6abe5924911a02047cf475071483e913b3
+    Image:          shhhowtime/kube-front-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:935cb83681e8ec41ef4436fb1c11fbc5bce64280af9ec80d5df8dc4a04f8defa
+    Port:           8000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:02 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ff2r8 (ro)
+  backend:
+    Container ID:   docker://5f2ab08423c80643e3415db6cb8147a5264493170bae6285b22a993bf8d5d12f
+    Image:          shhhowtime/kube-back-netology-markov:latest
+    Image ID:       docker-pullable://shhhowtime/kube-back-netology-markov@sha256:07ee5d600ac2fcc900d7dd6c7047c4cfa0b845228874044977e9c0b114e927c1
+    Port:           9000/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 21 Oct 2021 13:09:05 +0000
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ff2r8 (ro)
+Conditions:
+  Type              Status
+  Initialized       True 
+  Ready             True 
+  ContainersReady   True 
+  PodScheduled      True 
+Volumes:
+  kube-api-access-ff2r8:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  3m6s   default-scheduler  Successfully assigned default/staging-app-7b7d5f5f9c-bg5h7 to node1
+  Normal  Pulling    3m5s   kubelet            Pulling image "shhhowtime/kube-front-netology-markov:latest"
+  Normal  Pulled     3m2s   kubelet            Successfully pulled image "shhhowtime/kube-front-netology-markov:latest" in 2.566209455s
+  Normal  Created    3m2s   kubelet            Created container frontend
+  Normal  Started    3m2s   kubelet            Started container frontend
+  Normal  Pulling    3m2s   kubelet            Pulling image "shhhowtime/kube-back-netology-markov:latest"
+  Normal  Pulled     2m59s  kubelet            Successfully pulled image "shhhowtime/kube-back-netology-markov:latest" in 2.718878893s
+  Normal  Created    2m59s  kubelet            Created container backend
+  Normal  Started    2m59s  kubelet            Started container backend
+root@node1:~#
+root@node1:~#
+root@node1:~# kubectl get statefulset
+NAME          READY   AGE
+staging-app   1/1     3m46s
+root@node1:~#
+root@node1:~#
+root@node1:~# kubectl describe statefulset
+Name:               staging-app
+Namespace:          default
+CreationTimestamp:  Thu, 21 Oct 2021 13:08:58 +0000
+Selector:           app=staging-app
+Labels:             <none>
+Annotations:        <none>
+Replicas:           1 desired | 1 total
+Update Strategy:    RollingUpdate
+  Partition:        0
+Pods Status:        1 Running / 0 Waiting / 0 Succeeded / 0 Failed
+Pod Template:
+  Labels:  app=staging-app
+  Containers:
+   db:
+    Image:      postgres:13-alpine
+    Port:       <none>
+    Host Port:  <none>
+    Environment:
+      POSTGRES_PASSWORD:  postgres
+      POSTGRES_USER:      postgres
+      POSTGRES_DB:        news
+    Mounts:
+      /var/lib/postgresql from db (rw,path="postgres")
+  Volumes:  <none>
+Volume Claims:
+  Name:          db
+  StorageClass:  my-storage-class
+  Labels:        <none>
+  Annotations:   <none>
+  Capacity:      1Gi
+  Access Modes:  [ReadWriteOnce]
+Events:
+  Type    Reason            Age   From                    Message
+  ----    ------            ----  ----                    -------
+  Normal  SuccessfulCreate  4m4s  statefulset-controller  create Pod staging-app-0 in StatefulSet staging-app successful
+root@node1:~#
+root@node1:~#
+root@node1:~# kubectl get deployment
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+staging-app   1/1     1            1           6m44s
+root@node1:~#
+root@node1:~#
+root@node1:~# kubectl describe deployment
+Name:                   staging-app
+Namespace:              default
+CreationTimestamp:      Thu, 21 Oct 2021 13:08:58 +0000
+Labels:                 app=staging-app
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=staging-app
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=staging-app
+  Containers:
+   frontend:
+    Image:        shhhowtime/kube-front-netology-markov:latest
+    Port:         8000/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+   backend:
+    Image:        shhhowtime/kube-back-netology-markov:latest
+    Port:         9000/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   staging-app-7b7d5f5f9c (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  6m52s  deployment-controller  Scaled up replica set staging-app-7b7d5f5f9c to 1
